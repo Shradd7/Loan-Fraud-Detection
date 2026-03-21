@@ -1,0 +1,15 @@
+__pycache__/
+*.py[cod]
+*.pyo
+.env
+*.egg-info/
+.ipynb_checkpoints/
+*.csv
+*.xlsx
+*.xls
+*.pkl
+*.joblib
+*.h5
+.DS_Store
+Thumbs.db
+node_modules/
