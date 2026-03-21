@@ -1,4 +1,4 @@
-# Banking Loan Default Prediction
+# Loan Default Prediction
 
 ## Problem Statement
 
@@ -22,76 +22,107 @@ The key target variable is `TARGET`, where:
 A few key columns include:
 `ACCT_AGE`, `LIMIT`, `OUTS`, `LOAN_TENURE`, `INSTALAMT`, `KYC_SCR`, `CRIFF_33`, `INCOME_BAND1`, `CREDIT_HISTORY_LENGTH1`, `PRODUCT_TYPE`, `ALL_LON_LIMIT`, `LATEST_NPA_TENURE`, `NO_YRS_RG3`, and others. Monthly transactional fields are also present, such as `ONEMNTHSDR`, `TWOMNTHOUTSTANGBAL`, `THREEMNTHAVGMTD`, etc.
 
-## Methodology
 
-### 1. Data Cleaning and Feature Engineering
+![Python](https://img.shields.io/badge/Python-3.10-blue)
+![XGBoost](https://img.shields.io/badge/XGBoost-2.0-green)
+![LightGBM](https://img.shields.io/badge/LightGBM-4.1-green)
+![SHAP](https://img.shields.io/badge/Explainability-SHAP-orange)
 
-* Converted binary flags (`Y/N`) to numeric (`1/0`)
-* Parsed text-based durations like `2 yrs 3 mon` into total months
-* Mapped categorical features (`INCOME_BAND1`, `PRODUCT_TYPE`, etc.) to numeric codes
-* Converted `TIME_PERIOD` from strings like `JAN23` to numeric `YYYYMM` format
-* Engineered meaningful features:
+A machine learning system that predicts loan defaults using **XGBoost** and **LightGBM**, with **SHAP explainability**, **SMOTE-Tomek resampling**, and a prototype UI for credit officers.
 
-  * `overspend_ratio`: proportion of spending above monthly credit limit
-  * `max_consec_overspend`: longest streak of overspending months
-  * `outbal_slope`: trend direction of outstanding balances
-  * `slope_MTD`: trend in term debit activity
+---
 
-Unnecessary high-cardinality columns (e.g., SDR, MTD, OUTSTANGBAL series) were dropped to reduce dimensionality and noise.
+## 📁 Project Structure
+```
+📦 Loan-Default-Prediction
+ ┣ 📂 backend/            # FastAPI app serving the model
+ ┣ 📂 frontend/           # UI for credit officers
+ ┣ 📂 assets/             # plots and images
+ ┣ 📓 01_Data_Cleaning.ipynb
+ ┣ 📓 02_Model_Pipeline.ipynb
+ ┣ 📄 requirements.txt
+ ┗ 📄 README.md
+```
 
-### 2. Preprocessing and Transformation
+---
 
-* Median imputation for missing values
-* Yeo-Johnson transformation for normalization
-* Min-Max scaling to standardize feature ranges
+## 📊 Results
 
-### 3. Handling Class Imbalance
+| Model | Accuracy | F1-Score | Precision | Recall |
+|---|---|---|---|---|
+| XGBoost | ~91% | ~0.87 | ~0.85 | ~0.89 |
+| LightGBM | ~93% | ~0.89 | ~0.88 | ~0.91 |
 
-* Used SMOTE-Tomek (combination of oversampling and under-sampling) to balance defaulters and non-defaulters
 
-### 4. Feature Selection Using SHAP
+---
 
-* Trained a preliminary XGBoost model
-* Computed SHAP values to identify important features
-* Selected the top 30 most impactful features for final modeling
+## 🔍 Methodology
 
-### 5. Model Training and Evaluation
+### 1. Data Cleaning & Feature Engineering
+- Converted binary flags (Y/N) to numeric (1/0)
+- Parsed text durations like `2 yrs 3 mon` into total months
+- Engineered features: `overspend_ratio`, `max_consec_overspend`, `outbal_slope`, `slope_MTD`
 
-**Model 1: XGBoost**
+### 2. Handling Class Imbalance
+- Used **SMOTE-Tomek** (oversampling + undersampling) to balance defaulters and non-defaulters
 
-* Hyperparameter tuning using grid search
-* Evaluated on test data using F1-score, precision, recall, and confusion matrix
+### 3. Feature Selection
+- Trained a preliminary XGBoost model
+- Used **SHAP values** to select the top 30 most impactful features
 
-**Model 2: LightGBM**
+### 4. Model Training
+- **XGBoost** with grid search hyperparameter tuning
+- **LightGBM** with optimized decision threshold based on precision-recall curve
 
-* Trained on SHAP-selected features
-* Applied internal class balancing using `class_weight='balanced'`
-* Optimized decision threshold based on precision-recall curve to improve F1-score
+---
 
-## Evaluation Metrics
+## 🚀 Getting Started
 
-* Accuracy
-* F1-Score
-* Precision and Recall
-* Confusion Matrix
-* Precision-Recall AUC and threshold tuning
+### 1. Clone the repo
+```bash
+git clone https://github.com/Shradd7/Loan-Fraud-Detection.git
+cd Loan-Fraud-Detection
+```
 
-## Prototype Interface
+### 2. Install dependencies
+```bash
+pip install -r requirements.txt
+```
 
-To demonstrate the practical application of our solution, we developed a **prototype user interface**. The interface was built to simulate how bank employees can use the model in a real-world scenario. Features of the prototype include:
+### 3. Run the notebooks in order
+```
+01_Data_Cleaning.ipynb
+02_Model_Pipeline.ipynb
+```
 
-* Easy input of customer financial and behavioral attributes
-* Instant prediction of defaulter or non-defaulter status
-* Support for credit officers to quickly evaluate loan eligibility
-* Helpful summary of key risk indicators contributing to the prediction
-* Designed to make the ML model accessible and interpretable for non-technical users
+### 4. Start the backend
+```bash
+cd backend
+uvicorn main:app --reload
+```
 
-## Tools and Libraries
+---
 
-* Python (Pandas, NumPy)
-* Scikit-learn
-* XGBoost
-* LightGBM
-* SHAP (model explainability)
-* imbalanced-learn (for SMOTE-Tomek resampling)
-* Streamlit (for building the prototype interface)
+## 🛠️ Tools & Libraries
+
+| Category | Tools |
+|---|---|
+| Modeling | XGBoost, LightGBM, Scikit-learn |
+| Explainability | SHAP |
+| Resampling | imbalanced-learn (SMOTE-Tomek) |
+| Backend | FastAPI, Uvicorn |
+| Frontend | HTML, CSS, JavaScript |
+| Data | Pandas, NumPy, SciPy |
+
+---
+
+## 🔮 Future Work
+- Add real-time model monitoring and drift detection
+- Integrate live credit bureau APIs
+- A/B test decision thresholds across different loan products
+- Containerize with Docker for production deployment
+
+---
+
+## 👤 Author
+**Shradd7** — [GitHub](https://github.com/Shradd7)
