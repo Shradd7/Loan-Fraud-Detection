@@ -1,0 +1,138 @@
+/* App.css */
+body {
+  margin: 0;
+  font-family: 'Segoe UI', sans-serif;
+  background: radial-gradient(circle at 30% 30%, #00204a, #000);
+  color: white;
+  min-height: 100vh;
+}
+
+.navbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 20px 40px;
+ 
+  backdrop-filter: blur(6px);
+}
+
+.logo {
+  font-weight: bold;
+  font-size: 24px;
+  letter-spacing: 1px;
+}
+
+.nav-links a {
+  margin-left: 25px;
+  color: white;
+  text-decoration: none;
+  font-weight: bold;
+  transition: color 0.3s ease;
+}
+
+.nav-links a:hover {
+  color: #1e90ff;
+}
+
+.landing-container {
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  background: radial-gradient(circle at 50% 30%, #093b77, #000);
+}
+
+.main-content {
+  flex-grow: 1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  
+}
+
+.tagline {
+  text-align: left;
+  max-width: 400px;
+  background: rgba(255, 255, 255, 0.08);
+  padding: 40px;
+  border-radius: 20px;
+  backdrop-filter: blur(10px);
+  box-shadow: 0 0 20px rgba(0, 0, 0, 0.4);
+}
+
+.tagline h1 {
+  font-size: 36px;
+  line-height: 1.4;
+  margin-bottom: 30px;
+}
+
+.tagline input {
+  width: 100%;
+  padding: 12px;
+  font-size: 16px;
+  border-radius: 10px;
+  border: none;
+  background: rgba(255, 255, 255, 0.2);
+  color: white;
+  margin-bottom: 15px;
+  outline: none;
+  backdrop-filter: blur(5px);
+}
+
+.tagline input::placeholder {
+  color: #ccc;
+}
+
+.tagline button {
+  padding: 10px 25px;
+  font-size: 16px;
+  background-color: #1e90ff;
+  border: none;
+  border-radius: 10px;
+  color: white;
+  cursor: pointer;
+  transition: background 0.3s ease;
+}
+
+.tagline button:hover {
+  background-color: #0d6efd;
+}
+
+.result-page {
+  min-height: 100vh;
+  background: radial-gradient(circle at 30% 30%, #00204a, #000);
+  color: white;
+}
+
+.result-content {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: calc(100vh - 80px);
+  text-align: center;
+}
+
+.result-box {
+  background: rgba(255, 255, 255, 0.08);
+  padding: 30px 50px;
+  border-radius: 20px;
+  backdrop-filter: blur(12px);
+  font-size: 20px;
+  font-weight: bold;
+  border: 2px solid transparent;
+  box-shadow: 0 0 20px rgba(0, 0, 0, 0.3);
+}
+
+.safe {
+  border-color: #28a745;
+  color: #90ee90;
+}
+
+.fraud {
+  border-color: #dc3545;
+  color: #ffb3b3;
+}
+
+.error {
+  color: #ff6666;
+  font-weight: bold;
+}

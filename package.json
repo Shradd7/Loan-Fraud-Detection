@@ -1,0 +1,25 @@
+{
+  "name": "fraud-identification-and-defaulter-location-inference",
+  "version": "1.0.0",
+  "description": "This project focuses on predicting **non-defaulters** from a banking dataset using supervised machine learning. The objective is to help financial institutions in identifying low-risk customers, improving lending decisions, and mitigating default risk.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/AvaniGoyall/Fraud-Identification-and-Defaulter-Location-Inference.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/AvaniGoyall/Fraud-Identification-and-Defaulter-Location-Inference/issues"
+  },
+  "homepage": "https://github.com/AvaniGoyall/Fraud-Identification-and-Defaulter-Location-Inference#readme",
+  "dependencies": {
+    "cors": "^2.8.5",
+    "csv-parser": "^3.2.0",
+    "express": "^5.1.0"
+  }
+}
