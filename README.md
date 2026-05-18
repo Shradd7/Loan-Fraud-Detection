@@ -11,14 +11,15 @@ A two-part fraud detection system combining **ML-based loan default prediction**
 ---
 
 ## 📁 Project Structure
+```
 📦 Loan-Fraud-Detection
-┣ 📂 backend/                              # FastAPI app serving the model
-┣ 📂 frontend/                             # UI for credit officers
-┣ 📓 Task_1_Loan_Default_Prediction.ipynb  # ML pipeline for loan default prediction
-┣ 📓 Task_2_Location_Fraud_Agent.ipynb     # Multi-agent location verification system
-┣ 📄 requirements.txt
-┗ 📄 README.md
-
+├── 📂 backend/            # FastAPI app serving the model
+├── 📂 frontend/           # UI for credit officers
+├── 📓 Task_1_Loan_Default_Prediction.ipynb
+├── 📓 Task_2_Location_Fraud_Agent.ipynb
+├── 📄 requirements.txt
+└── 📄 README.md
+```
 ---
 
 ## 🧠 Task 1 — Loan Default Prediction
