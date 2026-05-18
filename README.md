@@ -1,4 +1,5 @@
- Loan Fraud Detection System
+📋 FILE CONTENT (README.md) — delete everything and paste this:
+markdown# 🏦 Loan Fraud Detection System
 
 ![Python](https://img.shields.io/badge/Python-3.10-blue)
 ![XGBoost](https://img.shields.io/badge/XGBoost-2.0-green)
@@ -7,6 +8,16 @@
 ![Groq](https://img.shields.io/badge/LLaMA3-Groq-orange)
 
 A two-part fraud detection system combining **ML-based loan default prediction** with a **multi-agent AI pipeline** for borrower location verification — built for a national-level hackathon.
+
+---
+
+## 💡 Problem Statement
+![Problem Statement](assets/problem%20statment.jpeg)
+
+---
+
+## 🏗️ Solution Architecture
+![Solution Architecture](assets/solution_architecture.jpeg)
 
 ---
 
@@ -32,14 +43,25 @@ A two-part fraud detection system combining **ML-based loan default prediction**
 5. **Feature Selection** — SHAP values on preliminary XGBoost → top 30 features selected
 6. **Final Model** — LightGBM with optimized decision threshold via precision-recall curve
 
+### Feature Scaling & Preprocessing
+![Feature Scaling](assets/feature%20scaling.jpeg)
+
+### Class Imbalance Handling
+![Class Imbalance](assets/results.jpeg)
+
+### SHAP Feature Importance
+![SHAP XGBoost](assets/shap.jpeg)
+
 ### Results
 
-| Model | Details |
+| Metric | Score |
 |---|---|
-| Base Model | XGBoost (for SHAP feature selection) |
-| Final Model | LightGBM with balanced class weights |
-| Threshold | Optimized via F1-maximizing precision-recall curve |
-| Key Features | CRIFF scores, overspend ratio, outstanding balance slope, KYC score |
+| Accuracy | 90% |
+| F1 Score | 60% |
+| Precision | 61% |
+| Recall | 61% |
+
+![Results](assets/results.jpeg)
 
 ---
 
@@ -47,26 +69,32 @@ A two-part fraud detection system combining **ML-based loan default prediction**
 
 A **LangGraph-powered 4-agent pipeline** that cross-references multiple data sources to verify whether a borrower's declared location matches their actual activity patterns — a key signal for fraud detection.
 
+### Why AI Agents?
+![Why AI Agents](assets/why%20ai%20agents.jpeg)
+
 ### Agent Architecture
 ```
 Input Data
-    |
-    v
+|
+v
 [Agent 1: Static Verifier]
-    - Branch Code, DL Number, Vehicle Number, Address, Phone Prefix
-    |
-    v
+- Branch Code, DL Number, Vehicle Number, Address, Phone Prefix
+|
+v
 [Agent 2: Activity Verifier]
-    - ATM Transactions, UPI Location, LinkedIn (scraped), Frequent/Last Location
-    |
-    v
+- ATM Transactions, UPI Location, LinkedIn (scraped), Frequent/Last Location
+|
+v
 [Agent 3: Cross Validator]
-    - Applies conflict penalties, detects multi-city anomalies
-    |
-    v
+- Applies conflict penalties, detects multi-city anomalies
+|
+v
 [Agent 4: Final Scorer]
-    - Output: Predicted Location | Confidence: High/Medium/Low | Manual Review flag
+- Output: Predicted Location | Confidence: High/Medium/Low | Manual Review flag
 ```
+### Agents Workflow
+![Agents Workflow](assets/ai-agents_workflow.jpeg)
+
 ### Scoring Logic
 
 | Data Source | Weight |
@@ -86,6 +114,15 @@ Input Data
 - **High** — score ≥ 7
 - **Medium** — 4 ≤ score < 7
 - **Low** — score < 4 → triggers Manual Review flag
+
+---
+
+## 🖥️ Frontend UI
+
+![UI Screenshot 1](assets/website%20asset%201.jpeg)
+![UI Screenshot 2](assets/website%20asset%202.jpeg)
+![UI Screenshot 3](assets/website%20asset%203.jpeg)
+![UI Screenshot 4](assets/website%20asset%204.jpeg)
 
 ---
 
@@ -138,6 +175,14 @@ docker-compose up
 | Backend | FastAPI, Uvicorn |
 | Frontend | HTML, CSS, JavaScript |
 | Data | Pandas, NumPy, SciPy |
+
+---
+
+## 🎯 Conclusion
+
+The system achieved **90% accuracy** with **60% F1 score**, **61% precision**, and **61% recall** on an imbalanced banking dataset — demonstrating that combining SMOTE-Tomek resampling with SHAP-based feature selection and threshold optimization produces reliable default predictions even under severe class imbalance.
+
+The multi-agent Task 2 pipeline adds a layer of identity verification that purely ML approaches miss — cross-referencing 9 real-world signals to flag location anomalies with explainable confidence scores, enabling human reviewers to prioritize high-risk cases efficiently.
 
 ---
 
