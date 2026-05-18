@@ -48,28 +48,25 @@ A two-part fraud detection system combining **ML-based loan default prediction**
 A **LangGraph-powered 4-agent pipeline** that cross-references multiple data sources to verify whether a borrower's declared location matches their actual activity patterns — a key signal for fraud detection.
 
 ### Agent Architecture
+```
 Input Data
-│
-▼
-Agent 1: Static Verifier
-→ Scores home location from: Branch Code, DL Number,
-Vehicle Number, Address, Phone Prefix
-│
-▼
-Agent 2: Activity Verifier
-→ Scores last known location from: ATM transactions,
-UPI location, LinkedIn (Selenium scraped), Frequent/Last location
-│
-▼
-Agent 3: Cross Validator
-→ Applies conflict penalties, detects multi-city anomalies,
-computes raw fraud score
-│
-▼
-Agent 4: Final Scorer
-→ Outputs: Predicted Location, Confidence (High/Medium/Low),
-Manual Review flag
-
+    |
+    v
+[Agent 1: Static Verifier]
+    - Branch Code, DL Number, Vehicle Number, Address, Phone Prefix
+    |
+    v
+[Agent 2: Activity Verifier]
+    - ATM Transactions, UPI Location, LinkedIn (scraped), Frequent/Last Location
+    |
+    v
+[Agent 3: Cross Validator]
+    - Applies conflict penalties, detects multi-city anomalies
+    |
+    v
+[Agent 4: Final Scorer]
+    - Output: Predicted Location | Confidence: High/Medium/Low | Manual Review flag
+```
 ### Scoring Logic
 
 | Data Source | Weight |
