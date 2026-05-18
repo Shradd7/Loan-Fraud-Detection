@@ -1,149 +1,142 @@
-# Loan Default Prediction
-
-## Problem Statement
-
-This project focuses on predicting **non-defaulters** from a banking dataset using supervised machine learning. The objective is to help financial institutions in identifying low-risk customers, improving lending decisions, and mitigating default risk.
-
-## Dataset
-
-The dataset used in this project is titled `HACKATHON_TRAINING_DATA.CSV`. It contains customer-level information including:
-
-* Credit limits and loan details
-* Monthly outstanding balances and debits
-* Risk indicators such as CRIFF scores and repayment grades
-* Account behavior trends over 12 months
-* KYC status, digital banking indicators, and more
-
-The key target variable is `TARGET`, where:
-
-* `0` indicates a non-defaulter
-* `1` indicates a defaulter
-
-A few key columns include:
-`ACCT_AGE`, `LIMIT`, `OUTS`, `LOAN_TENURE`, `INSTALAMT`, `KYC_SCR`, `CRIFF_33`, `INCOME_BAND1`, `CREDIT_HISTORY_LENGTH1`, `PRODUCT_TYPE`, `ALL_LON_LIMIT`, `LATEST_NPA_TENURE`, `NO_YRS_RG3`, and others. Monthly transactional fields are also present, such as `ONEMNTHSDR`, `TWOMNTHOUTSTANGBAL`, `THREEMNTHAVGMTD`, etc.
-
+ Loan Fraud Detection System
 
 ![Python](https://img.shields.io/badge/Python-3.10-blue)
 ![XGBoost](https://img.shields.io/badge/XGBoost-2.0-green)
 ![LightGBM](https://img.shields.io/badge/LightGBM-4.1-green)
-![SHAP](https://img.shields.io/badge/Explainability-SHAP-orange)
+![LangGraph](https://img.shields.io/badge/LangGraph-MultiAgent-purple)
+![Groq](https://img.shields.io/badge/LLaMA3-Groq-orange)
 
-A machine learning system that predicts loan defaults using **XGBoost** and **LightGBM**, with **SHAP explainability**, **SMOTE-Tomek resampling**, and a prototype UI for credit officers.
+A two-part fraud detection system combining **ML-based loan default prediction** with a **multi-agent AI pipeline** for borrower location verification — built for a national-level hackathon.
 
 ---
 
 ## 📁 Project Structure
-```
-📦 Loan-Default-Prediction
- ┣ 📂 backend/            # FastAPI app serving the model
- ┣ 📂 frontend/           # UI for credit officers
- ┣ 📂 assets/             # plots and images
- ┣ 📓 01_Data_Cleaning.ipynb
- ┣ 📓 02_Model_Pipeline.ipynb
- ┣ 📄 requirements.txt
- ┗ 📄 README.md
-```
+📦 Loan-Fraud-Detection
+┣ 📂 backend/                              # FastAPI app serving the model
+┣ 📂 frontend/                             # UI for credit officers
+┣ 📓 Task_1_Loan_Default_Prediction.ipynb  # ML pipeline for loan default prediction
+┣ 📓 Task_2_Location_Fraud_Agent.ipynb     # Multi-agent location verification system
+┣ 📄 requirements.txt
+┗ 📄 README.md
 
 ---
 
-## 📊 Results
+## 🧠 Task 1 — Loan Default Prediction
 
-| Model | Accuracy | F1-Score | Precision | Recall |
-|---|---|---|---|---|
-| XGBoost | ~91% | ~0.87 | ~0.85 | ~0.89 |
-| LightGBM | ~93% | ~0.89 | ~0.88 | ~0.91 |
+### Methodology
+1. **Data Cleaning** — binary flag encoding (Y/N → 1/0), duration parsing (`2 yrs 3 mon` → months), income band ordinal encoding
+2. **Feature Engineering** — `overspend_ratio`, `max_consec_overspend`, `outbal_slope`, `slope_MTD`
+3. **Preprocessing** — Yeo-Johnson power transform + MinMax scaling + median imputation
+4. **Class Imbalance** — SMOTE-Tomek resampling
+5. **Feature Selection** — SHAP values on preliminary XGBoost → top 30 features selected
+6. **Final Model** — LightGBM with optimized decision threshold via precision-recall curve
 
+### Results
+
+| Model | Details |
+|---|---|
+| Base Model | XGBoost (for SHAP feature selection) |
+| Final Model | LightGBM with balanced class weights |
+| Threshold | Optimized via F1-maximizing precision-recall curve |
+| Key Features | CRIFF scores, overspend ratio, outstanding balance slope, KYC score |
 
 ---
 
-## 🔍 Methodology
+## 🤖 Task 2 — Multi-Agent Location Verification
 
-### 1. Data Cleaning & Feature Engineering
-- Converted binary flags (Y/N) to numeric (1/0)
-- Parsed text durations like `2 yrs 3 mon` into total months
-- Engineered features: `overspend_ratio`, `max_consec_overspend`, `outbal_slope`, `slope_MTD`
+A **LangGraph-powered 4-agent pipeline** that cross-references multiple data sources to verify whether a borrower's declared location matches their actual activity patterns — a key signal for fraud detection.
 
-### 2. Handling Class Imbalance
-- Used **SMOTE-Tomek** (oversampling + undersampling) to balance defaulters and non-defaulters
+### Agent Architecture
+Input Data
+│
+▼
+Agent 1: Static Verifier
+→ Scores home location from: Branch Code, DL Number,
+Vehicle Number, Address, Phone Prefix
+│
+▼
+Agent 2: Activity Verifier
+→ Scores last known location from: ATM transactions,
+UPI location, LinkedIn (Selenium scraped), Frequent/Last location
+│
+▼
+Agent 3: Cross Validator
+→ Applies conflict penalties, detects multi-city anomalies,
+computes raw fraud score
+│
+▼
+Agent 4: Final Scorer
+→ Outputs: Predicted Location, Confidence (High/Medium/Low),
+Manual Review flag
 
-### 3. Feature Selection
-- Trained a preliminary XGBoost model
-- Used **SHAP values** to select the top 30 most impactful features
+### Scoring Logic
 
-### 4. Model Training
-- **XGBoost** with grid search hyperparameter tuning
-- **LightGBM** with optimized decision threshold based on precision-recall curve
+| Data Source | Weight |
+|---|---|
+| ATM Transaction Location | +3.0 |
+| UPI Location | +2.5 |
+| DL Number (State) | +2.0 |
+| Branch Code | +2.0 |
+| LinkedIn Location (scraped) | +1.5 |
+| Address | +1.5 |
+| Vehicle Number (State) | +1.0 |
+| Frequent / Last Location | +1.0 |
+| Phone Prefix | +0.5 |
+| State conflict penalty | -2.0 per conflict |
+
+### Confidence Levels
+- **High** — score ≥ 7
+- **Medium** — 4 ≤ score < 7
+- **Low** — score < 4 → triggers Manual Review flag
 
 ---
 
 ## 🚀 Getting Started
 
-### Option 1 — Run Locally
-
-**1. Clone the repo**
+### 1. Clone the repo
 ```bash
 git clone https://github.com/Shradd7/Loan-Fraud-Detection.git
 cd Loan-Fraud-Detection
 ```
 
-**2. Install dependencies**
+### 2. Install dependencies
 ```bash
 pip install -r requirements.txt
 ```
 
-**3. Run the notebooks in order**
+### 3. Set your Groq API key (Task 2)
+In `Task_2_Location_Fraud_Agent.ipynb`, replace:
+```python
+GROQ_API_KEY = "YOUR_GROQ_API_KEY"
 ```
-01_Data_Cleaning.ipynb
-02_Model_Pipeline.ipynb
-```
-> Running 02_Model_Pipeline.ipynb will save model.pkl into the backend/ folder.
+Get a free key at https://console.groq.com
 
-**4. Start the backend API**
+### 4. Start the backend API
 ```bash
 cd backend
 uvicorn main:app --reload
 ```
 
-**5. Open the frontend**
-
-Open `frontend/index.html` directly in your browser.
-
-**6. Test the API**
-
-Visit `http://localhost:8000/docs` in your browser to see the
-interactive API documentation auto-generated by FastAPI.
-
----
-
-### Option 2 — Run with Docker
-
-**1. Make sure Docker Desktop is installed**
-
-Download from https://www.docker.com/products/docker-desktop
-
-**2. Clone the repo**
-```bash
-git clone https://github.com/Shradd7/Loan-Fraud-Detection.git
-cd Loan-Fraud-Detection
-```
-
-**3. Start everything with one command**
+### 5. Run with Docker
 ```bash
 docker-compose up
 ```
-
-**4. Access the services**
 - Backend API → http://localhost:8000
 - API Docs → http://localhost:8000/docs
 - Frontend → http://localhost:3000
 
-## 🛠️ Tools & Libraries
+---
+
+## 🛠️ Tech Stack
 
 | Category | Tools |
 |---|---|
-| Modeling | XGBoost, LightGBM, Scikit-learn |
+| ML Modeling | XGBoost, LightGBM, Scikit-learn |
 | Explainability | SHAP |
 | Resampling | imbalanced-learn (SMOTE-Tomek) |
+| Multi-Agent AI | LangGraph, LangChain |
+| LLM | LLaMA3-70B via Groq |
+| Web Scraping | Selenium, webdriver-manager |
 | Backend | FastAPI, Uvicorn |
 | Frontend | HTML, CSS, JavaScript |
 | Data | Pandas, NumPy, SciPy |
@@ -151,10 +144,10 @@ docker-compose up
 ---
 
 ## 🔮 Future Work
-- Add real-time model monitoring and drift detection
-- Integrate live credit bureau APIs
-- A/B test decision thresholds across different loan products
-- Containerize with Docker for production deployment
+- Deploy Task 1 model as a FastAPI endpoint with real-time scoring
+- Replace Selenium scraping with official LinkedIn API
+- Add real-time fraud scoring dashboard
+- Extend agent pipeline to verify social media consistency
 
 ---
 
