@@ -35,7 +35,7 @@ Task 1 data
   -> FastAPI /predict and /predict-by-id
   -> React risk panel
 
-Task 2 dummy records
+Task 2 location records
   -> local RAG retrieval
   -> planner agent
   -> static identity verifier
@@ -56,8 +56,8 @@ Loan-Fraud-Detection/
   docs/                     Model card and data card
   tests/                    Focused unit tests
   assets/                   Existing presentation images
-  Task_1_*.ipynb            Original hackathon notebook
-  Task_2_*.ipynb            Original hackathon notebook
+  Task_1_*.ipynb            Original exploration notebook
+  Task_2_*.ipynb            Original exploration notebook
   HACKATHON_TRAINING_DATA.CSV
   Dummy Dataset Final.txt
 ```
@@ -72,7 +72,7 @@ Raw datasets are intentionally not committed:
 - `Dummy Dataset Final.txt`
 - `artifacts/`
 
-Place these files locally before training or running the full demo. Public GitHub should contain code, docs, model cards, tests, and the local RAG knowledge base only.
+Place these files locally before training or running the full demo. Public GitHub should contain code, docs, model cards, tests, and the local retrieval knowledge base only.
 
 ## System Overview
 
@@ -234,7 +234,7 @@ Task 1 uses `UNIQUE_ID` from the training CSV:
 | `2047` | medium fraud probability |
 | `5558` | high fraud probability / Fraud Risk |
 
-Task 2 uses account IDs from the local dummy dataset:
+Task 2 uses account IDs from the local location dataset:
 
 | Account ID | Expected output |
 |---|---|
@@ -242,18 +242,9 @@ Task 2 uses account IDs from the local dummy dataset:
 | `123456` | high-confidence Jaipur/Rajasthan case with conflicts |
 | `145932` | low-confidence manual-review case |
 
-## Portfolio Talking Points
-
-- I converted a notebook-only hackathon solution into a reproducible ML system.
-- I tuned the decision threshold for F1 instead of relying on a default 0.5 cutoff.
-- I added PR-AUC and ROC-AUC because fraud/default data is imbalanced.
-- I replaced paid/API-dependent agents with local RAG for auditability.
-- I added model/data cards and a human-review policy for responsible AI.
-- I built a dashboard that supports analyst decisions rather than only showing a binary label.
-
 ## Current Limitations
 
-- Task 2 uses synthetic dummy data and local rules, so it is suitable for demos but not real identity verification.
+- Task 2 uses synthetic local records and local rules, so it is suitable for demos but not real identity verification.
 - Fairness checks across sensitive or proxy groups should be added before any real lending use.
 
 ## Author
