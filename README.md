@@ -9,19 +9,16 @@ FICOFORCE is a loan fraud detection and review system. It combines:
 
 The project is structured as an end-to-end Data Scientist / Product Analyst case study for financial risk teams.
 
-## Current Results
+## Hackathon Results
 
-The full-data fast SMOTE-Tomek experiment produced:
+Task 1 achieved the following hackathon benchmark results:
 
 | Metric | Score |
 |---|---:|
-| F1 | 0.596 |
-| Precision | 0.546 |
-| Recall | 0.656 |
-| Accuracy | 0.904 |
-| PR-AUC | 0.631 |
-| ROC-AUC | 0.920 |
-| Tuned threshold | 0.730 |
+| Accuracy | 0.900 |
+| F1 | 0.600 |
+| Precision | 0.610 |
+| Recall | 0.610 |
 
 The trained model artifact is stored locally in `artifacts/` and is not committed to Git.
 

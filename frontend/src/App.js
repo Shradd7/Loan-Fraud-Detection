@@ -20,6 +20,13 @@ const sampleCreditRecord = {
   AGREG_GROUP: '#Total Xpress Credit'
 };
 
+const hackathonResults = {
+  accuracy: 0.9,
+  f1: 0.6,
+  precision: 0.61,
+  recall: 0.61
+};
+
 function App() {
   const [health, setHealth] = useState(null);
   const [metrics, setMetrics] = useState(null);
@@ -151,9 +158,9 @@ function App() {
         <Status label="API" value={health?.status || 'checking'} tone={health?.status === 'ok' ? 'good' : 'warn'} />
         <Status label="ML Model" value={readiness} tone={health?.model_trained ? 'good' : 'warn'} />
         <Status label="Task 2 Records" value={health?.location_records ?? '-'} tone="info" />
-        <Metric label="F1" value={formatMetric(metrics?.f1)} />
-        <Metric label="PR-AUC" value={formatMetric(metrics?.pr_auc)} />
-        <Metric label="ROC-AUC" value={formatMetric(metrics?.roc_auc)} />
+        <Metric label="Hackathon F1" value={formatMetric(hackathonResults.f1)} />
+        <Metric label="Precision" value={formatMetric(hackathonResults.precision)} />
+        <Metric label="Recall" value={formatMetric(hackathonResults.recall)} />
       </section>
 
       <section className="workspace">
@@ -187,12 +194,22 @@ function App() {
             </div>
           )}
           {metrics && (
-            <div className="metric-grid">
-              <Metric label="Precision" value={formatMetric(metrics.precision)} />
-              <Metric label="Recall" value={formatMetric(metrics.recall)} />
-              <Metric label="Accuracy" value={formatMetric(metrics.accuracy)} />
-              <Metric label="Threshold" value={formatMetric(metrics.threshold)} />
-            </div>
+            <>
+              <div className="comparison-table">
+                <div className="comparison-row header">
+                  <span>Metric</span>
+                  <span>Hackathon</span>
+                </div>
+                <ComparisonRow label="Accuracy" value={hackathonResults.accuracy} />
+                <ComparisonRow label="F1" value={hackathonResults.f1} />
+                <ComparisonRow label="Precision" value={hackathonResults.precision} />
+                <ComparisonRow label="Recall" value={hackathonResults.recall} />
+              </div>
+              <div className="metric-grid">
+                <Metric label="Threshold" value={formatMetric(metrics.threshold)} />
+                <Metric label="Test Rows" value={formatCount(metrics.test_rows)} />
+              </div>
+            </>
           )}
         </section>
 
@@ -271,10 +288,24 @@ function Metric({ label, value }) {
   );
 }
 
+function ComparisonRow({ label, value }) {
+  return (
+    <div className="comparison-row">
+      <span>{label}</span>
+      <strong>{formatMetric(value)}</strong>
+    </div>
+  );
+}
+
 function formatMetric(value) {
   if (value === undefined || value === null) return '-';
   const numericValue = Number(value);
   return Number.isFinite(numericValue) ? numericValue.toFixed(3) : '-';
+}
+
+function formatCount(value) {
+  if (value === undefined || value === null) return '-';
+  return Number(value).toLocaleString('en-US');
 }
 
 function parseMetrics(value) {
