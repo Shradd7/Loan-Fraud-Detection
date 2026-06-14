@@ -1,0 +1,93 @@
+[
+  {
+    "id": "state-rj",
+    "kind": "state_code",
+    "code": "RJ",
+    "state": "Rajasthan",
+    "cities": ["Jaipur", "GandhiNagar Jaipur", "Bhilwara", "Udaipur", "Jodhpur"]
+  },
+  {
+    "id": "state-mp",
+    "kind": "state_code",
+    "code": "MP",
+    "state": "Madhya Pradesh",
+    "cities": ["Bhopal", "Indore", "Jabalpur", "Gwalior"]
+  },
+  {
+    "id": "state-mh",
+    "kind": "state_code",
+    "code": "MH",
+    "state": "Maharashtra",
+    "cities": ["Mumbai", "Pune", "Nagpur", "Navi Mumbai", "Satara", "Parbhani"]
+  },
+  {
+    "id": "state-dl",
+    "kind": "state_code",
+    "code": "DL",
+    "state": "Delhi",
+    "cities": ["Delhi", "New Delhi", "Nangloi Jat", "Noida"]
+  },
+  {
+    "id": "state-up",
+    "kind": "state_code",
+    "code": "UP",
+    "state": "Uttar Pradesh",
+    "cities": ["Lucknow", "Bareilly", "Noida", "Ghaziabad", "Shahjahanpur"]
+  },
+  {
+    "id": "state-ka",
+    "kind": "state_code",
+    "code": "KA",
+    "state": "Karnataka",
+    "cities": ["Bengaluru", "Gulbarga", "Davanagere"]
+  },
+  {
+    "id": "state-pb",
+    "kind": "state_code",
+    "code": "PB",
+    "state": "Punjab",
+    "cities": ["Ludhiana", "Bathinda"]
+  },
+  {
+    "id": "state-tn",
+    "kind": "state_code",
+    "code": "TN",
+    "state": "Tamil Nadu",
+    "cities": ["Chennai", "Salem"]
+  },
+  {
+    "id": "state-hr",
+    "kind": "state_code",
+    "code": "HR",
+    "state": "Haryana",
+    "cities": ["Gurugram", "Faridabad"]
+  },
+  {
+    "id": "branch-jaipur",
+    "kind": "branch_code",
+    "code": "263148",
+    "city": "Jaipur",
+    "state": "Rajasthan"
+  },
+  {
+    "id": "branch-pune",
+    "kind": "branch_code",
+    "code": "120910",
+    "city": "Pune",
+    "state": "Maharashtra"
+  },
+  {
+    "id": "branch-bareilly",
+    "kind": "branch_code",
+    "code": "250001",
+    "city": "Bareilly",
+    "state": "Uttar Pradesh"
+  },
+  {
+    "id": "branch-nagpur",
+    "kind": "branch_code",
+    "code": "249193",
+    "city": "Nagpur",
+    "state": "Maharashtra"
+  }
+]

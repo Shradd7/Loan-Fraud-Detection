@@ -1,16 +1,20 @@
-version: "3.8"
-
 services:
   backend:
-    build: ./backend
+    build:
+      context: .
+      dockerfile: backend/Dockerfile
     ports:
       - "8000:8000"
     volumes:
-      - ./backend:/app
+      - ./artifacts:/app/artifacts
+      - ./Dummy Dataset Final.txt:/app/Dummy Dataset Final.txt:ro
 
   frontend:
-    image: nginx:alpine
+    build:
+      context: ./frontend
     ports:
-      - "3000:80"
-    volumes:
-      - ./frontend:/usr/share/nginx/html
+      - "3000:3000"
+    environment:
+      - REACT_APP_API_BASE=http://localhost:8000
+    depends_on:
+      - backend

@@ -1,8 +1,9 @@
 import { render, screen } from '@testing-library/react';
 import App from './App';
 
-test('renders learn react link', () => {
+test('renders FICOFORCE dashboard', () => {
   render(<App />);
-  const linkElement = screen.getByText(/learn react/i);
-  expect(linkElement).toBeInTheDocument();
+  expect(screen.getByText(/FICOFORCE/i)).toBeInTheDocument();
+  expect(screen.getByText(/ML Fraud Risk Detection/i)).toBeInTheDocument();
+  expect(screen.getByText(/RAG Location Verification/i)).toBeInTheDocument();
 });

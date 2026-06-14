@@ -1,0 +1,22 @@
+[build-system]
+requires = ["setuptools>=68", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "ficoforce"
+version = "2026.1.0"
+description = "Loan default risk scoring and local RAG-based location fraud verification."
+requires-python = ">=3.10"
+dependencies = [
+  "fastapi>=0.104",
+  "uvicorn>=0.24",
+  "pandas>=2.1",
+  "numpy>=1.26",
+  "scikit-learn>=1.3",
+  "imbalanced-learn>=0.11",
+  "lightgbm>=4.1",
+  "joblib>=1.3",
+]
+
+[tool.setuptools.packages.find]
+where = ["src"]

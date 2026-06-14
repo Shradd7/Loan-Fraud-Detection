@@ -1,18 +1,15 @@
-# Use official Python image
 FROM python:3.10-slim
 
-# Set working directory
 WORKDIR /app
 
-# Copy and install dependencies
-COPY requirements.txt .
+COPY requirements.txt pyproject.toml ./
+COPY src ./src
 RUN pip install --no-cache-dir -r requirements.txt
+RUN pip install --no-cache-dir -e .
 
-# Copy the backend code
-COPY . .
+COPY backend ./backend
+COPY data ./data
 
-# Expose the port FastAPI runs on
 EXPOSE 8000
 
-# Start the API
-CMD ["uvicorn", "main:app", "--host", "0.0.0.0", "--port", "8000"]
+CMD ["uvicorn", "backend.main:app", "--host", "0.0.0.0", "--port", "8000"]

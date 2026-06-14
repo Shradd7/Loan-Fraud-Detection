@@ -7,9 +7,17 @@ __pycache__/
 *.csv
 *.xlsx
 *.xls
+Dummy Dataset Final.txt
 *.pkl
 *.joblib
 *.h5
+artifacts/
+.venv/
+venv/
+data/raw/
 .DS_Store
 Thumbs.db
 node_modules/
+.npm-cache/
+*.log
+frontend/build/

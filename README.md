@@ -1,198 +1,261 @@
-📋 FILE CONTENT (README.md) — delete everything and paste this:
-markdown# 🏦 Loan Fraud Detection System
+# FICOFORCE
 
-![Python](https://img.shields.io/badge/Python-3.10-blue)
-![XGBoost](https://img.shields.io/badge/XGBoost-2.0-green)
-![LightGBM](https://img.shields.io/badge/LightGBM-4.1-green)
-![LangGraph](https://img.shields.io/badge/LangGraph-MultiAgent-purple)
-![Groq](https://img.shields.io/badge/LLaMA3-Groq-orange)
+FICOFORCE is a loan fraud detection and review system. It combines:
 
-A two-part fraud detection system combining **ML-based loan default prediction** with a **multi-agent AI pipeline** for borrower location verification — built for a national-level hackathon.
+- Task 1: ML-based fraud risk detection with a reproducible LightGBM training pipeline
+- Task 2: local RAG-based borrower location verification without Groq, Selenium, or scraping
+- FastAPI backend for model scoring and verification
+- React analyst dashboard for credit review workflows
 
----
+The project is structured as an end-to-end Data Scientist / Product Analyst case study for financial risk teams.
 
-## 💡 Problem Statement
-![Problem Statement](assets/problem%20statment.jpeg)
+## Current Results
 
----
-
-## 🏗️ Solution Architecture
-![Solution Architecture](assets/solution_architecture.jpeg)
-
----
-
-## 📁 Project Structure
-```
-📦 Loan-Fraud-Detection
-├── 📂 backend/            # FastAPI app serving the model
-├── 📂 frontend/           # UI for credit officers
-├── 📓 Task_1_Loan_Default_Prediction.ipynb
-├── 📓 Task_2_Location_Fraud_Agent.ipynb
-├── 📄 requirements.txt
-└── 📄 README.md
-```
----
-
-## 🧠 Task 1 — Loan Default Prediction
-
-### Methodology
-1. **Data Cleaning** — binary flag encoding (Y/N → 1/0), duration parsing (`2 yrs 3 mon` → months), income band ordinal encoding
-2. **Feature Engineering** — `overspend_ratio`, `max_consec_overspend`, `outbal_slope`, `slope_MTD`
-3. **Preprocessing** — Yeo-Johnson power transform + MinMax scaling + median imputation
-4. **Class Imbalance** — SMOTE-Tomek resampling
-5. **Feature Selection** — SHAP values on preliminary XGBoost → top 30 features selected
-6. **Final Model** — LightGBM with optimized decision threshold via precision-recall curve
-
-### Feature Scaling & Preprocessing
-![Feature Scaling](assets/feature%20scaling.jpeg)
-
-### Class Imbalance Handling
-![Class Imbalance](assets/results.jpeg)
-
-### SHAP Feature Importance
-![SHAP XGBoost](assets/shap.jpeg)
-
-### Results
+The full-data fast SMOTE-Tomek experiment produced:
 
 | Metric | Score |
-|---|---|
-| Accuracy | 90% |
-| F1 Score | 60% |
-| Precision | 61% |
-| Recall | 61% |
+|---|---:|
+| F1 | 0.596 |
+| Precision | 0.546 |
+| Recall | 0.656 |
+| Accuracy | 0.904 |
+| PR-AUC | 0.631 |
+| ROC-AUC | 0.920 |
+| Tuned threshold | 0.730 |
 
-![Results](assets/results.jpeg)
+The trained model artifact is stored locally in `artifacts/` and is not committed to Git.
 
----
+## Architecture
 
-## 🤖 Task 2 — Multi-Agent Location Verification
+```text
+Task 1 data
+  -> feature engineering
+  -> LightGBM training pipeline
+  -> threshold tuning
+  -> FastAPI /predict and /predict-by-id
+  -> React risk panel
 
-A **LangGraph-powered 4-agent pipeline** that cross-references multiple data sources to verify whether a borrower's declared location matches their actual activity patterns — a key signal for fraud detection.
-
-### Why AI Agents?
-![Why AI Agents](assets/why%20ai%20agents.jpeg)
-
-### Agent Architecture
+Task 2 dummy records
+  -> local RAG retrieval
+  -> planner agent
+  -> static identity verifier
+  -> activity location verifier
+  -> conflict resolver and scorer
+  -> FastAPI /location-verify
+  -> React evidence panel
 ```
-Input Data
-|
-v
-[Agent 1: Static Verifier]
-- Branch Code, DL Number, Vehicle Number, Address, Phone Prefix
-|
-v
-[Agent 2: Activity Verifier]
-- ATM Transactions, UPI Location, LinkedIn (scraped), Frequent/Last Location
-|
-v
-[Agent 3: Cross Validator]
-- Applies conflict penalties, detects multi-city anomalies
-|
-v
-[Agent 4: Final Scorer]
-- Output: Predicted Location | Confidence: High/Medium/Low | Manual Review flag
+
+## Project Structure
+
+```text
+Loan-Fraud-Detection/
+  backend/                  FastAPI service
+  frontend/                 React analyst dashboard
+  src/ficoforce/            Training, prediction, feature, and RAG code
+  data/rag/                 Local retrieval knowledge base
+  docs/                     Model card and data card
+  tests/                    Focused unit tests
+  assets/                   Existing presentation images
+  Task_1_*.ipynb            Original hackathon notebook
+  Task_2_*.ipynb            Original hackathon notebook
+  HACKATHON_TRAINING_DATA.CSV
+  Dummy Dataset Final.txt
 ```
-### Agents Workflow
-![Agents Workflow](assets/ai-agents_workflow.jpeg)
 
-### Scoring Logic
+Large data/model artifacts are ignored by Git.
 
-| Data Source | Weight |
-|---|---|
-| ATM Transaction Location | +3.0 |
-| UPI Location | +2.5 |
-| DL Number (State) | +2.0 |
-| Branch Code | +2.0 |
-| LinkedIn Location (scraped) | +1.5 |
-| Address | +1.5 |
-| Vehicle Number (State) | +1.0 |
-| Frequent / Last Location | +1.0 |
-| Phone Prefix | +0.5 |
-| State conflict penalty | -2.0 per conflict |
+## Data Policy
 
-### Confidence Levels
-- **High** — score ≥ 7
-- **Medium** — 4 ≤ score < 7
-- **Low** — score < 4 → triggers Manual Review flag
+Raw datasets are intentionally not committed:
 
----
+- `HACKATHON_TRAINING_DATA.CSV`
+- `Dummy Dataset Final.txt`
+- `artifacts/`
 
-## 🖥️ Frontend UI
+Place these files locally before training or running the full demo. Public GitHub should contain code, docs, model cards, tests, and the local RAG knowledge base only.
 
-![UI Screenshot 1](assets/website%20asset%201.jpeg)
-![UI Screenshot 2](assets/website%20asset%202.jpeg)
-![UI Screenshot 3](assets/website%20asset%203.jpeg)
-![UI Screenshot 4](assets/website%20asset%204.jpeg)
+## System Overview
 
----
+### Task 1: ML Fraud Risk Detection
 
-## 🚀 Getting Started
+The notebook workflow is available as a reproducible training package:
 
-### 1. Clone the repo
+- deterministic feature engineering
+- Y/N flag encoding
+- duration parsing
+- income band handling
+- overspend ratio and consecutive overspend features
+- outstanding balance and debit trend slopes
+- fast profile using imputation plus LightGBM class weighting
+- optional deep profile with Yeo-Johnson transformation
+- optional SMOTE-Tomek imbalance experiment for smaller samples
+- LightGBM classifier
+- validation-set threshold tuning for F1
+- test-set reporting with F1, precision, recall, accuracy, PR-AUC, ROC-AUC, and confusion matrix
+- business-cost reporting for false positives and false negatives
+- segment-audit utility for fairness-style checks across product, income, or geography groups
+
+### Task 2: Location Verification
+
+Location verification uses a local RAG system:
+
+- no API key required
+- no browser automation
+- no LinkedIn scraping
+- retrieves branch/state/location rules from `data/rag/location_knowledge.json`
+- scores evidence from branch code, address, UPI location, frequent location, last location, driving license, vehicle number, and phone prefix
+- runs a local 4-agent pipeline: planner, static verifier, activity verifier, and final conflict scorer
+- returns confidence, conflict count, manual review flag, and evidence trail
+
+## Setup
+
+Create a local environment:
+
 ```bash
-git clone https://github.com/Shradd7/Loan-Fraud-Detection.git
-cd Loan-Fraud-Detection
+python -m venv .venv
+.venv\Scripts\activate
+pip install -r requirements.txt
+pip install -e .
 ```
 
-### 2. Install dependencies
+If Windows opens the Microsoft Store for `python`, install Python 3.10+ from python.org and reopen the terminal.
+
+## Train Task 1
+
+Quick smoke training on a sample:
+
+```bash
+python -m ficoforce.train --sample-frac 0.05
+```
+
+Full training, recommended first:
+
+```bash
+python -m ficoforce.train
+```
+
+SMOTE-Tomek experiment on a smaller sample:
+
+```bash
+python -m ficoforce.train --profile deep --resampling smote_tomek --sample-frac 0.25
+```
+
+Full SMOTE-Tomek run with progress logs:
+
+```bash
+python -m ficoforce.train --profile fast --resampling smote_tomek
+```
+
+Use `--quiet` only if you want to hide the step logs.
+
+Outputs:
+
+```text
+artifacts/ficoforce_default_model.joblib
+artifacts/ficoforce_metrics.json
+```
+
+The model is ignored by Git, which is correct for a GitHub-connected project.
+
+## Run Backend
+
+```bash
+uvicorn backend.main:app --reload
+```
+
+API:
+
+- `GET /health`
+- `GET /model-info`
+- `POST /predict`
+- `POST /predict-by-id`
+- `POST /location-verify`
+- `GET /location-records`
+
+## Run Frontend
+
+```bash
+cd frontend
+npm.cmd install
+npm.cmd start
+```
+
+Open:
+
+```text
+http://localhost:3000
+```
+
+The dashboard talks to:
+
+```text
+http://localhost:8000
+```
+
+## Docker
+
+```bash
+docker-compose up --build
+```
+
+Backend:
+
+```text
+http://localhost:8000
+```
+
+Frontend:
+
+```text
+http://localhost:3000
+```
+
+## Testing
+
 ```bash
 pip install -r requirements.txt
+pytest -q
 ```
 
-### 3. Set your Groq API key (Task 2)
-In `Task_2_Location_Fraud_Agent.ipynb`, replace:
-```python
-GROQ_API_KEY = "YOUR_GROQ_API_KEY"
-```
-Get a free key at https://console.groq.com
+Frontend:
 
-### 4. Start the backend API
 ```bash
-cd backend
-uvicorn main:app --reload
+cd frontend
+npm.cmd test -- --watchAll=false
 ```
 
-### 5. Run with Docker
-```bash
-docker-compose up
-```
-- Backend API → http://localhost:8000
-- API Docs → http://localhost:8000/docs
-- Frontend → http://localhost:3000
+## Demo Inputs
 
----
+Task 1 uses `UNIQUE_ID` from the training CSV:
 
-## 🛠️ Tech Stack
-
-| Category | Tools |
+| UNIQUE_ID | Expected output |
 |---|---|
-| ML Modeling | XGBoost, LightGBM, Scikit-learn |
-| Explainability | SHAP |
-| Resampling | imbalanced-learn (SMOTE-Tomek) |
-| Multi-Agent AI | LangGraph, LangChain |
-| LLM | LLaMA3-70B via Groq |
-| Web Scraping | Selenium, webdriver-manager |
-| Backend | FastAPI, Uvicorn |
-| Frontend | HTML, CSS, JavaScript |
-| Data | Pandas, NumPy, SciPy |
+| `2032` | low fraud probability |
+| `2047` | medium fraud probability |
+| `5558` | high fraud probability / Fraud Risk |
 
----
+Task 2 uses account IDs from the local dummy dataset:
 
-## 🎯 Conclusion
+| Account ID | Expected output |
+|---|---|
+| `340128` | medium-confidence Pune/Maharashtra case |
+| `123456` | high-confidence Jaipur/Rajasthan case with conflicts |
+| `145932` | low-confidence manual-review case |
 
-The system achieved **90% accuracy** with **60% F1 score**, **61% precision**, and **61% recall** on an imbalanced banking dataset — demonstrating that combining SMOTE-Tomek resampling with SHAP-based feature selection and threshold optimization produces reliable default predictions even under severe class imbalance.
+## Portfolio Talking Points
 
-The multi-agent Task 2 pipeline adds a layer of identity verification that purely ML approaches miss — cross-referencing 9 real-world signals to flag location anomalies with explainable confidence scores, enabling human reviewers to prioritize high-risk cases efficiently.
+- I converted a notebook-only hackathon solution into a reproducible ML system.
+- I tuned the decision threshold for F1 instead of relying on a default 0.5 cutoff.
+- I added PR-AUC and ROC-AUC because fraud/default data is imbalanced.
+- I replaced paid/API-dependent agents with local RAG for auditability.
+- I added model/data cards and a human-review policy for responsible AI.
+- I built a dashboard that supports analyst decisions rather than only showing a binary label.
 
----
+## Current Limitations
 
-## 🔮 Future Work
-- Deploy Task 1 model as a FastAPI endpoint with real-time scoring
-- Replace Selenium scraping with official LinkedIn API
-- Add real-time fraud scoring dashboard
-- Extend agent pipeline to verify social media consistency
+- Task 2 uses synthetic dummy data and local rules, so it is suitable for demos but not real identity verification.
+- Fairness checks across sensitive or proxy groups should be added before any real lending use.
 
----
+## Author
 
-## 👤 Author
-**Shradd7** — [GitHub](https://github.com/Shradd7)
+Shraddhan Singhai
